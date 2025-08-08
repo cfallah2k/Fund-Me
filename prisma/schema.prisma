@@ -1,0 +1,257 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  bio           String?
+  location      String?
+  website       String?
+  phone         String?
+  userType      UserType  @default(INDIVIDUAL)
+  isVerified    Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts      Account[]
+  sessions      Session[]
+  campaigns     Campaign[]
+  investments   Investment[]
+  donations     Donation[]
+  comments      Comment[]
+  notifications Notification[]
+  messages      Message[]
+  sentMessages  Message[] @relation("MessageSender")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+enum UserType {
+  INDIVIDUAL
+  STARTUP
+  BUSINESS
+  NGO
+  INVESTOR
+  MENTOR
+}
+
+enum CampaignType {
+  CROWDFUNDING
+  VENTURE_FUNDING
+  EQUITY_OFFERING
+  SOCIAL_CAUSE
+  PERSONAL_NEED
+}
+
+enum CampaignStatus {
+  DRAFT
+  ACTIVE
+  FUNDED
+  COMPLETED
+  CANCELLED
+}
+
+enum InvestmentType {
+  DONATION
+  EQUITY
+  DEBT
+  REWARD
+}
+
+model Campaign {
+  id              String         @id @default(cuid())
+  title           String
+  description     String
+  shortDescription String
+  category        String
+  type            CampaignType
+  status          CampaignStatus @default(DRAFT)
+  goalAmount      Float
+  currentAmount   Float          @default(0)
+  currency        String         @default("USD")
+  startDate       DateTime
+  endDate         DateTime
+  location        String?
+  tags            String[]
+  images          String[]
+  videoUrl        String?
+  equityPercentage Float?
+  minInvestment   Float?
+  maxInvestment   Float?
+  rewards         Json?
+  updates         Json?
+  risks           String?
+  team            Json?
+  documents       String[]
+  isVerified      Boolean        @default(false)
+  featured        Boolean        @default(false)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  userId          String
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  investments     Investment[]
+  donations       Donation[]
+  comments        Comment[]
+  notifications   Notification[]
+}
+
+model Investment {
+  id          String         @id @default(cuid())
+  amount      Float
+  type        InvestmentType
+  currency    String         @default("USD")
+  message     String?
+  isAnonymous Boolean        @default(false)
+  status      PaymentStatus  @default(PENDING)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  userId      String
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  campaignId  String
+  campaign    Campaign       @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  transaction Transaction?
+}
+
+model Donation {
+  id          String        @id @default(cuid())
+  amount      Float
+  currency    String        @default("USD")
+  message     String?
+  isAnonymous Boolean       @default(false)
+  status      PaymentStatus @default(PENDING)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  userId      String
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  campaignId  String
+  campaign    Campaign      @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  transaction Transaction?
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum TransactionType {
+  INVESTMENT
+  DONATION
+  WITHDRAWAL
+  FEE
+}
+
+model Transaction {
+  id              String          @id @default(cuid())
+  amount          Float
+  currency        String          @default("USD")
+  type            TransactionType
+  status          PaymentStatus   @default(PENDING)
+  stripePaymentId String?
+  stripeRefundId  String?
+  fee             Float           @default(0)
+  description     String?
+  metadata        Json?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  investment      Investment?
+  donation        Donation?
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  isPublic  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  campaignId String
+  campaign  Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  title     String
+  message   String
+  type      NotificationType
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  campaignId String?
+  campaign  Campaign?        @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+}
+
+enum NotificationType {
+  CAMPAIGN_UPDATE
+  INVESTMENT_RECEIVED
+  GOAL_REACHED
+  CAMPAIGN_ENDING
+  SYSTEM
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  content   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  senderId  String
+  sender    User     @relation("MessageSender", fields: [senderId], references: [id], onDelete: Cascade)
+  receiverId String
+  receiver  User     @relation(fields: [receiverId], references: [id], onDelete: Cascade)
+}
