@@ -45,3 +45,11 @@
   ^O^P  ^Op         *  Search backward for (_N-th) OSC8 hyperlink.
   ^O^L  ^Ol            Jump to the currently selected OSC8 hyperlink.
   ESC-u                Undo (toggle) search highlighting.
+[33m1778345[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m Fix server/client component conflict: move generateStaticParams to layout.tsx
+[33mee41446[m Add generateStaticParams() to campaigns/[id] page for Next.js static export
+[33m62c29da[m Fix Lucide React icon imports: replace Google with Globe, Fire with Flame, Handshake with Users
+[33m6ce1d17[m Configure Next.js for static export and Netlify deployment
+[33m69a152c[m Fix syntax errors in success-stories page
+[33m29e517d[m Add 10 new pages: Terms, Privacy, Contact, Categories, Settings, Analytics, Blog, Team, Help Center, and Success Stories
+[33ma9037ff[m Initial commit: Fund-Me crowdfunding platform
+[33m6de2b45[m Initial commit: Complete Fund-Me crowdfunding platform with all essential features
