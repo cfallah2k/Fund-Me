@@ -8,7 +8,7 @@ import {
   Share2, 
   TrendingUp,
   Search,
-  Handshake,
+  Users,
   DollarSign,
   CheckCircle
 } from 'lucide-react'
@@ -54,7 +54,7 @@ const HowItWorksSection = () => {
       step: '1',
     },
     {
-      icon: Handshake,
+      icon: Users,
       title: 'Connect & Research',
       description: 'Connect with entrepreneurs, ask questions, and conduct due diligence on projects.',
       step: '2',

@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { Eye, EyeOff, Mail, Lock, User, Phone, ArrowRight, Facebook, Twitter, Google, CheckCircle } from 'lucide-react'
+import { Eye, EyeOff, Mail, Lock, User, Phone, ArrowRight, Facebook, Twitter, Globe, CheckCircle } from 'lucide-react'
 
 const SignUpPage = () => {
   const [showPassword, setShowPassword] = useState(false)
@@ -161,7 +161,7 @@ const SignUpPage = () => {
               onClick={() => handleSocialSignUp('google')}
               className="w-full flex items-center justify-center space-x-3 px-4 py-3 border border-accent-300 rounded-lg bg-white text-accent-700 hover:bg-accent-50 transition-colors duration-200"
             >
-              <Google className="w-5 h-5" />
+                              <Globe className="w-5 h-5" />
               <span>Continue with Google</span>
             </button>
 

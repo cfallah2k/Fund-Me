@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { 
   TrendingUp, 
-  Fire, 
+  Flame, 
   Star, 
   Users, 
   Calendar,
@@ -224,7 +224,7 @@ const TrendingPage = () => {
           <div className="flex flex-col lg:flex-row lg:items-center justify-between space-y-4 lg:space-y-0">
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
-                <Fire className="w-5 h-5 text-orange-500" />
+                <Flame className="w-5 h-5 text-orange-500" />
                 <span className="font-semibold text-accent-900">Trending Now</span>
               </div>
               <span className="text-accent-600">•</span>
@@ -359,7 +359,7 @@ const TrendingPage = () => {
                   {/* Trending Badge */}
                   <div className="absolute top-4 left-4">
                     <div className="flex items-center space-x-1 px-2 py-1 bg-orange-500 text-white text-xs rounded-full">
-                      <Fire className="w-3 h-3" />
+                      <Flame className="w-3 h-3" />
                       <span>{campaign.trendingScore}</span>
                     </div>
                   </div>
