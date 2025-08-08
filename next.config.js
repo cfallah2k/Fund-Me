@@ -1,16 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    appDir: true,
-  },
+  output: 'export',
+  trailingSlash: true,
   images: {
-    domains: ['localhost', 'res.cloudinary.com', 'images.unsplash.com'],
+    unoptimized: true
   },
   env: {
-    STRIPE_PUBLISHABLE_KEY: process.env.STRIPE_PUBLISHABLE_KEY,
-    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
-    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
-    NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+    STRIPE_PUBLISHABLE_KEY: process.env.STRIPE_PUBLISHABLE_KEY || '',
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY || '',
+    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET || '',
+    NEXTAUTH_URL: process.env.NEXTAUTH_URL || '',
   },
 }
 
